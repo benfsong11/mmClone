@@ -1,11 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'signup_success.dart';
 
-class NicknamePage extends StatelessWidget {
+class NicknamePage extends StatefulWidget {
+  @override
+  _NicknamePageState createState() => _NicknamePageState();
+}
+
+class _NicknamePageState extends State<NicknamePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController _nicknameController = TextEditingController();
+
+  void onValueChange() {
+    setState(() {
+      _nicknameController.text;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _nicknameController.addListener(onValueChange);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +56,24 @@ class NicknamePage extends StatelessWidget {
                       primaryColor: Colors.deepPurple,
                     ),
                     child: TextFormField(
+                      keyboardType: TextInputType.text,
+                      maxLength: 20,
+                      inputFormatters: [
+                        new LengthLimitingTextInputFormatter(20),
+                      ],
                       cursorColor: Colors.deepPurple,
                       style: TextStyle(
                         color: Colors.white,
+                        fontSize: 25,
                       ),
                       controller: _nicknameController,
                       decoration: InputDecoration(
+                        counterText:
+                            "${20 - _nicknameController.text.length}/20",
+                        counterStyle: TextStyle(
+                          fontSize: 15,
+                          color: Colors.grey,
+                        ),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.black,
@@ -68,7 +98,6 @@ class NicknamePage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
-                    vertical: 10,
                   ),
                   child: Text(
                     "음(mm)에서 사용할 이름이에요.\n7자 이상인 경우 잘려 보일 수 있어요!",
